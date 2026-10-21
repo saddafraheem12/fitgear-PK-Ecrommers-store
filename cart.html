@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | FitGear Pakistan</title>
+    <meta name="description" content="Review your selected gym equipment, update quantities, calculate shipping, and proceed to checkout with Cash on Delivery at FitGear Pakistan.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Top Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container announcement-content">
+            <div class="announcement-ticker">
+                <i class="fas fa-truck-moving"></i>
+                <span><strong>FREE SHIPPING</strong> across Pakistan on orders above PKR 5,000 | Cash on Delivery (COD) Available</span>
+            </div>
+            <div class="announcement-contact">
+                <a href="tel:+923001234567"><i class="fas fa-phone-alt"></i> +92 300 1234567</a>
+                <a href="contact.html"><i class="fas fa-envelope"></i> info@fitgear.pk</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daraz Top Utility Bar -->
+    <div class="daraz-bar">
+        <div class="container daraz-bar-content">
+            <div class="daraz-links">
+                <a href="index.html#flash-deals" class="highlight"><i class="fas fa-bolt"></i> Flash Deals</a>
+                <a href="index.html#vouchers-section"><i class="fas fa-ticket-alt"></i> Collectible Vouchers</a>
+                <a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a>
+                <a href="contact.html"><i class="fas fa-headset"></i> Customer Care</a>
+                <a href="about.html"><i class="fas fa-shield-alt"></i> 100% Authentic Guarantee</a>
+            </div>
+            <div class="daraz-auth-controls" id="header-auth-section">
+                <!-- Dynamically populated by updateAuthUI() in script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                    FITGEAR <span>PK</span>
+                </a>
+            </div>
+
+            <!-- Standard 5 Navigation Items: Home, Shop, About, Contact, Cart -->
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="cart.html" class="active"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <div class="header-search">
+                    <input type="text" id="header-search-input" placeholder="Search gym equipment..." autocomplete="off">
+                    <button type="button" aria-label="Search"><i class="fas fa-search"></i></button>
+                    <div class="search-results-dropdown" id="search-dropdown"></div>
+                </div>
+
+                <a href="wishlist.html" class="action-btn" title="Saved Wishlist" aria-label="Wishlist">
+                    <i class="far fa-heart"></i>
+                    <span class="action-count wishlist-count" id="wishlist-count" style="display: none;">0</span>
+                </a>
+
+                <button type="button" class="action-btn" onclick="openCartDrawer()" title="View Cart" aria-label="Shopping Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="action-count cart-count" id="cart-count" style="display: none;">0</span>
+                </button>
+
+                <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Slide-in Drawer -->
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-header">
+            <div class="logo">
+                <a href="index.html">
+                    <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                    FITGEAR <span>PK</span>
+                </a>
+            </div>
+            <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="shop.html"><i class="fas fa-store"></i> Shop All Products</a>
+            <a href="about.html"><i class="fas fa-info-circle"></i> About FitGear</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+            <a href="cart.html" class="active"><i class="fas fa-shopping-cart"></i> Cart</a>
+            <a href="wishlist.html"><i class="fas fa-heart"></i> My Wishlist</a>
+            <a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a>
+        </div>
+    </div>
+
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <!-- Slide-over Mini-Cart Drawer -->
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-drawer-header">
+            <h3><i class="fas fa-shopping-bag" style="color: var(--accent);"></i> Your Shopping Bag</h3>
+            <button class="cart-drawer-close" onclick="closeCartDrawer()" aria-label="Close cart">&times;</button>
+        </div>
+        <div class="cart-drawer-items" id="cart-drawer-items"></div>
+        <div class="cart-drawer-footer">
+            <div class="drawer-subtotal">
+                <span>Subtotal:</span>
+                <span id="drawer-subtotal-price">PKR 0</span>
+            </div>
+            <div class="drawer-buttons">
+                <a href="checkout.html" class="btn btn-primary btn-block">
+                    <i class="fas fa-lock"></i> Proceed to Checkout
+                </a>
+                <a href="cart.html" class="btn btn-secondary btn-block" onclick="closeCartDrawer()">
+                    View Full Cart
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <section class="cart-page-section">
+            <div class="container">
+                <div class="section-header" style="text-align: left; margin-bottom: 30px;">
+                    <div class="shop-breadcrumb">
+                        <a href="index.html">Home</a>
+                        <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+                        <a href="shop.html">Shop</a>
+                        <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+                        <span>Shopping Cart</span>
+                    </div>
+                    <h2>Review Your Shopping Cart</h2>
+                </div>
+
+                <div class="cart-layout">
+                    <!-- Cart Items Column -->
+                    <div class="cart-table-card">
+                        <!-- Free Delivery Progress Bar -->
+                        <div class="shipping-threshold-banner">
+                            <div id="threshold-msg">Calculate your Free Nationwide Delivery eligibility</div>
+                            <div class="threshold-progress">
+                                <div class="threshold-bar" id="threshold-bar"></div>
+                            </div>
+                        </div>
+
+                        <h3>Selected Fitness Hardware</h3>
+                        <div class="cart-items-wrapper" id="cart-items-wrapper">
+                            <!-- Populated dynamically by JavaScript -->
+                        </div>
+
+                        <div style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                            <a href="shop.html" class="btn btn-outline">
+                                <i class="fas fa-arrow-left"></i> Continue Shopping
+                            </a>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="cart = []; saveCart(); renderCartPage(); showToast('Cart cleared', 'info');">
+                                <i class="fas fa-trash-alt"></i> Clear Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cart Summary Column -->
+                    <div class="cart-summary-card">
+                        <h3>Order Summary</h3>
+
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="cart-page-subtotal">PKR 0</span>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Promo Discount:</span>
+                            <span id="cart-page-discount" style="color: var(--success);">-PKR 0</span>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Estimated Shipping:</span>
+                            <span id="cart-page-shipping">PKR 0</span>
+                        </div>
+
+                        <!-- Coupon Code Section -->
+                        <div style="margin: 20px 0; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                            <label for="coupon-input" style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">
+                                Promotional Voucher
+                            </label>
+                            <div class="coupon-box">
+                                <input type="text" id="coupon-input" placeholder="e.g. FITGEAR10" autocomplete="off">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="applyCouponCode()">Apply</button>
+                            </div>
+                            <div id="coupon-message" class="coupon-message"></div>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0;">
+                                Available codes: <strong>FITGEAR10</strong> (10% off) or <strong>WELCOME500</strong> (PKR 500 off)
+                            </p>
+                        </div>
+
+                        <div class="summary-row total-row">
+                            <span>Total Payable:</span>
+                            <span id="cart-page-total">PKR 0</span>
+                        </div>
+
+                        <a href="checkout.html" class="btn btn-primary btn-block btn-lg" id="cart-checkout-btn" style="margin-top: 20px;">
+                            <i class="fas fa-lock"></i> Proceed to Checkout
+                        </a>
+
+                        <div style="margin-top: 20px; padding: 14px; background: var(--bg-surface); border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 8px;">
+                            <div><i class="fas fa-shield-alt" style="color: var(--accent);"></i> Secure Checkout Process</div>
+                            <div><i class="fas fa-money-bill-wave" style="color: var(--success);"></i> Cash on Delivery (COD) Available Nationwide</div>
+                            <div><i class="fas fa-sync-alt" style="color: var(--gold);"></i> 7-Day Replacement for Damaged Goods</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating WhatsApp Widget -->
+    <a href="https://wa.me/923001234567?text=Hi%20FitGear%20Pakistan%2C%20I%20have%20a%20question%20about%20my%20cart." class="floating-whatsapp" target="_blank" aria-label="WhatsApp Support">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="mobile-bottom-nav">
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i><span>Home</span></a></li>
+            <li><a href="shop.html"><i class="fas fa-store"></i><span>Shop</span></a></li>
+            <li><a href="about.html"><i class="fas fa-info-circle"></i><span>About</span></a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i><span>Contact</span></a></li>
+            <li><a href="cart.html" class="active"><i class="fas fa-shopping-bag"></i><span>Cart</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 FitGear Pakistan. All rights reserved.</p>
+                <div class="payment-badges-row">
+                    <span title="Cash on Delivery"><i class="fas fa-hand-holding-usd"></i> Cash on Delivery</span>
+                    <span title="Direct Bank Transfer"><i class="fas fa-university"></i> Bank Transfer</span>
+                    <span title="WhatsApp Orders"><i class="fab fa-whatsapp"></i> WhatsApp Order</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

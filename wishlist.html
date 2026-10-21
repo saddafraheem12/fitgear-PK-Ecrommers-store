@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist | FitGear Pakistan</title>
+    <meta name="description" content="View and manage your saved gym equipment, barbells, dumbbells, and cardio machines on FitGear Pakistan.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container announcement-content">
+            <div class="announcement-ticker">
+                <i class="fas fa-heart" style="color: var(--accent);"></i>
+                <span>Save your dream gym setup and order anytime with nationwide Cash on Delivery!</span>
+            </div>
+            <div class="announcement-contact">
+                <a href="tel:+923001234567"><i class="fas fa-phone-alt"></i> +92 300 1234567</a>
+                <a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                    FITGEAR <span>PK</span>
+                </a>
+            </div>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop All</a></li>
+                    <li><a href="shop.html?category=weights">Weights</a></li>
+                    <li><a href="shop.html?category=machines">Cardio</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <div class="header-search">
+                    <input type="text" id="header-search-input" placeholder="Search gym equipment..." autocomplete="off">
+                    <button type="button" aria-label="Search"><i class="fas fa-search"></i></button>
+                    <div class="search-results-dropdown" id="search-dropdown"></div>
+                </div>
+
+                <a href="wishlist.html" class="action-btn" title="Saved Wishlist" aria-label="Wishlist">
+                    <i class="fas fa-heart" style="color: var(--accent);"></i>
+                    <span class="action-count wishlist-count" id="wishlist-count" style="display: none;">0</span>
+                </a>
+
+                <button type="button" class="action-btn" onclick="openCartDrawer()" title="View Cart" aria-label="Shopping Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="action-count cart-count" id="cart-count" style="display: none;">0</span>
+                </button>
+
+                <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Slide-in Drawer -->
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-header">
+            <div class="logo">
+                <a href="index.html">
+                    <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                    FITGEAR <span>PK</span>
+                </a>
+            </div>
+            <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="shop.html"><i class="fas fa-store"></i> Shop All Products</a>
+            <a href="wishlist.html" class="active"><i class="fas fa-heart"></i> My Wishlist</a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+            <a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a>
+            <a href="about.html"><i class="fas fa-info-circle"></i> About FitGear</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+        </div>
+    </div>
+
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <!-- Slide-over Mini-Cart Drawer -->
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-drawer-header">
+            <h3><i class="fas fa-shopping-bag" style="color: var(--accent);"></i> Your Gym Bag</h3>
+            <button class="cart-drawer-close" onclick="closeCartDrawer()" aria-label="Close cart">&times;</button>
+        </div>
+        <div class="cart-drawer-items" id="cart-drawer-items"></div>
+        <div class="cart-drawer-footer">
+            <div class="drawer-subtotal">
+                <span>Subtotal:</span>
+                <span id="drawer-subtotal-price">PKR 0</span>
+            </div>
+            <div class="drawer-buttons">
+                <a href="checkout.html" class="btn btn-primary btn-block">
+                    <i class="fas fa-shield-alt"></i> Secure Checkout
+                </a>
+                <a href="cart.html" class="btn btn-secondary btn-block" onclick="closeCartDrawer()">
+                    View Full Cart & Apply Coupons
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <section class="shop-page-header">
+            <div class="container">
+                <div class="shop-breadcrumb">
+                    <a href="index.html">Home</a>
+                    <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+                    <span>My Saved Wishlist</span>
+                </div>
+                <h2>Your Saved Gym Gear</h2>
+                <p>Keep track of the equipment you want to add to your fitness arsenal.</p>
+            </div>
+        </section>
+
+        <section class="products-section" style="background: var(--bg-dark);">
+            <div class="container">
+                <div class="product-grid" id="wishlist-grid">
+                    <!-- Loaded dynamically by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Quick View Modal Container -->
+    <div class="modal-overlay" id="quick-view-modal">
+        <div class="modal-card quick-view-card">
+            <button class="modal-close-btn" onclick="closeQuickView()" aria-label="Close modal">&times;</button>
+            <div id="quick-view-content" style="display: contents;"></div>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Widget -->
+    <a href="https://wa.me/923001234567?text=Hi%20FitGear%20Pakistan%2C%20I%20have%20an%20inquiry." class="floating-whatsapp" target="_blank" aria-label="WhatsApp Support">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="mobile-bottom-nav">
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i><span>Home</span></a></li>
+            <li><a href="shop.html"><i class="fas fa-store"></i><span>Shop</span></a></li>
+            <li><a href="wishlist.html" class="active"><i class="fas fa-heart"></i><span>Wishlist</span></a></li>
+            <li><a href="javascript:void(0)" onclick="openCartDrawer()"><i class="fas fa-shopping-bag"></i><span>Cart</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 FitGear Pakistan. All rights reserved.</p>
+                <div class="payment-badges-row">
+                    <span title="Cash on Delivery"><i class="fas fa-hand-holding-usd"></i> COD</span>
+                    <span title="JazzCash"><i class="fas fa-mobile-alt"></i> JazzCash</span>
+                    <span title="EasyPaisa"><i class="fas fa-wallet"></i> EasyPaisa</span>
+                    <span title="Bank Wire"><i class="fas fa-university"></i> Bank Wire</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

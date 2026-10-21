@@ -1,0 +1,9 @@
+{
+  "name": "fitgear-pakistan",
+  "version": "2.0.0",
+  "description": "FitGear Pakistan - Full-Stack Real Database-Backed E-Commerce Store Inspired by Daraz Pakistan",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

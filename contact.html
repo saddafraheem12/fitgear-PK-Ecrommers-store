@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | FitGear Pakistan</title>
+    <meta name="description" content="Get in touch with FitGear Pakistan for gym equipment inquiries, product questions, and order assistance.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container announcement-content">
+            <div class="announcement-ticker">
+                <i class="fas fa-headset" style="color: var(--accent);"></i>
+                <span>Have questions about equipment specifications? Call our customer service team at +92 300 1234567.</span>
+            </div>
+            <div class="announcement-contact">
+                <a href="tel:+923001234567"><i class="fas fa-phone-alt"></i> +92 300 1234567</a>
+                <a href="contact.html"><i class="fas fa-envelope"></i> info@fitgear.pk</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daraz Top Utility Bar -->
+    <div class="daraz-bar">
+        <div class="container daraz-bar-content">
+            <div class="daraz-links">
+                <a href="index.html#flash-deals" class="highlight"><i class="fas fa-bolt"></i> Flash Deals</a>
+                <a href="index.html#vouchers-section"><i class="fas fa-ticket-alt"></i> Collectible Vouchers</a>
+                <a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a>
+                <a href="contact.html" class="active"><i class="fas fa-headset"></i> Customer Care</a>
+                <a href="about.html"><i class="fas fa-shield-alt"></i> 100% Authentic Guarantee</a>
+            </div>
+            <div class="daraz-auth-controls" id="header-auth-section">
+                <!-- Dynamically populated by updateAuthUI() in script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                    FITGEAR <span>PK</span>
+                </a>
+            </div>
+
+            <!-- Standard 5 Navigation Items: Home, Shop, About, Contact, Cart -->
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
+                    <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <div class="header-search">
+                    <input type="text" id="header-search-input" placeholder="Search gym equipment..." autocomplete="off">
+                    <button type="button" aria-label="Search"><i class="fas fa-search"></i></button>
+                    <div class="search-results-dropdown" id="search-dropdown"></div>
+                </div>
+
+                <a href="wishlist.html" class="action-btn" title="Saved Wishlist" aria-label="Wishlist">
+                    <i class="far fa-heart"></i>
+                    <span class="action-count wishlist-count" id="wishlist-count" style="display: none;">0</span>
+                </a>
+
+                <button type="button" class="action-btn" onclick="openCartDrawer()" title="View Cart" aria-label="Shopping Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="action-count cart-count" id="cart-count" style="display: none;">0</span>
+                </button>
+
+                <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Slide-in Drawer -->
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-header">
+            <div class="logo">
+                <a href="index.html">
+                    <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                    FITGEAR <span>PK</span>
+                </a>
+            </div>
+            <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="shop.html"><i class="fas fa-store"></i> Shop All Products</a>
+            <a href="about.html"><i class="fas fa-info-circle"></i> About FitGear</a>
+            <a href="contact.html" class="active"><i class="fas fa-envelope"></i> Contact Us</a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+            <a href="wishlist.html"><i class="fas fa-heart"></i> My Wishlist</a>
+            <a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a>
+        </div>
+    </div>
+
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <!-- Slide-over Mini-Cart Drawer -->
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-drawer-header">
+            <h3><i class="fas fa-shopping-bag" style="color: var(--accent);"></i> Your Shopping Bag</h3>
+            <button class="cart-drawer-close" onclick="closeCartDrawer()" aria-label="Close cart">&times;</button>
+        </div>
+        <div class="cart-drawer-items" id="cart-drawer-items"></div>
+        <div class="cart-drawer-footer">
+            <div class="drawer-subtotal">
+                <span>Subtotal:</span>
+                <span id="drawer-subtotal-price">PKR 0</span>
+            </div>
+            <div class="drawer-buttons">
+                <a href="checkout.html" class="btn btn-primary btn-block">
+                    <i class="fas fa-lock"></i> Proceed to Checkout
+                </a>
+                <a href="cart.html" class="btn btn-secondary btn-block" onclick="closeCartDrawer()">
+                    View Full Cart
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <section class="about-hero-section">
+            <div class="container">
+                <div class="shop-breadcrumb">
+                    <a href="index.html">Home</a>
+                    <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+                    <span>Contact Us</span>
+                </div>
+                <h2>Get in Touch with FitGear Pakistan</h2>
+                <p>Have questions, feedback, or need assistance with your order? Our team is here to help.</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Exact Supplied Business Contact Information -->
+                <div class="contact-card-info">
+                    <h3>Business Details</h3>
+
+                    <div class="contact-detail-row">
+                        <div class="contact-detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <h4>Our Address</h4>
+                            <p style="margin-bottom: 2px;">123 Fitness Ave, Lahore, Pakistan</p>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Main office and equipment warehouse</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-detail-row">
+                        <div class="contact-detail-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div>
+                            <h4>Phone Number</h4>
+                            <p style="margin-bottom: 2px;"><a href="tel:+923001234567" style="color: #fff; font-weight: 700;">+92 300 1234567</a></p>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Monday – Friday, 9:00 AM – 6:00 PM</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-detail-row">
+                        <div class="contact-detail-icon"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <h4>Email Address</h4>
+                            <p style="margin-bottom: 2px;"><a href="mailto:info@fitgear.pk" style="color: #fff;">info@fitgear.pk</a></p>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Inquiries answered within 24 hours</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px;">
+                        <a href="https://wa.me/923001234567?text=Hi%20FitGear%20Pakistan%2C%20I%20have%20an%20inquiry." target="_blank" class="btn btn-whatsapp btn-block">
+                            <i class="fab fa-whatsapp"></i> Chat on WhatsApp (+92 300 1234567)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Contact Form with Validation & Transparent Backend-Free Notice -->
+                <div class="checkout-box" style="margin-bottom: 0;">
+                    <h3><i class="fas fa-paper-plane" style="color: var(--accent);"></i> Send an Inquiry</h3>
+                    <form id="contact-form" onsubmit="handleContactSubmit(event)">
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="contact-name">Full Name <span class="required">*</span></label>
+                                <input type="text" id="contact-name" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-phone">Phone Number <span class="required">*</span></label>
+                                <input type="tel" id="contact-phone" placeholder="03001234567" required pattern="03[0-9]{9}" title="Please enter a valid 11-digit Pakistani phone number">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="contact-email" placeholder="name@example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-subject">Subject</label>
+                            <select id="contact-subject">
+                                <option value="Product Inquiry">Product Inquiry</option>
+                                <option value="Order Status">Order Status Inquiry</option>
+                                <option value="Delivery Question">Delivery & Shipping Question</option>
+                                <option value="General Feedback">General Feedback</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-msg">Message <span class="required">*</span></label>
+                            <textarea id="contact-msg" rows="4" placeholder="How can we assist you with your fitness equipment needs?" required></textarea>
+                        </div>
+
+                        <div id="contact-form-notice" style="display: none; padding: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5;"></div>
+
+                        <button type="submit" class="btn btn-primary btn-block" id="contact-submit-btn">
+                            <i class="fas fa-paper-plane"></i> Submit Inquiry
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <section style="margin: 60px 0 100px;">
+                <div class="section-header">
+                    <span class="sub-title">Common Questions</span>
+                    <h2>Frequently Asked Questions</h2>
+                </div>
+
+                <div class="faq-accordion">
+                    <div class="faq-item active">
+                        <div class="faq-question">
+                            <span>How does Cash on Delivery work for equipment orders?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Cash on Delivery is available across Pakistan. You place your order online, we confirm and dispatch it with our courier partners, and you pay cash to the delivery rider upon package arrival.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>What are your delivery timelines?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Orders within Lahore are typically delivered within 24 to 48 hours. Orders to Karachi, Islamabad, Rawalpindi, and other major cities arrive within 2 to 4 business days.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Are products covered by warranty?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Yes. Motorized treadmills include an official 2-year motor warranty. Structural equipment such as power cages and benches feature frame durability coverage.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Floating WhatsApp Widget -->
+    <a href="https://wa.me/923001234567?text=Hi%20FitGear%20Pakistan%2C%20I'd%20like%20to%20chat." class="floating-whatsapp" target="_blank" aria-label="WhatsApp Support">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="mobile-bottom-nav">
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i><span>Home</span></a></li>
+            <li><a href="shop.html"><i class="fas fa-store"></i><span>Shop</span></a></li>
+            <li><a href="about.html"><i class="fas fa-info-circle"></i><span>About</span></a></li>
+            <li><a href="contact.html" class="active"><i class="fas fa-envelope"></i><span>Contact</span></a></li>
+            <li><a href="cart.html"><i class="fas fa-shopping-bag"></i><span>Cart</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Footer with Exact Business Details -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-widget">
+                    <div class="logo" style="margin-bottom: 16px;">
+                        <a href="index.html">
+                            <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                            FITGEAR <span>PK</span>
+                        </a>
+                    </div>
+                    <p>FitGear Pakistan is dedicated to providing reliable, durable, and affordable fitness equipment to athletes and workout enthusiasts across Pakistan.</p>
+                </div>
+                <div class="footer-widget">
+                    <h4>Navigation</h4>
+                    <div class="footer-links">
+                        <a href="index.html"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Home</a>
+                        <a href="shop.html"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Shop Equipment</a>
+                        <a href="about.html"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> About Us</a>
+                        <a href="contact.html"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Contact Us</a>
+                        <a href="cart.html"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> View Cart</a>
+                    </div>
+                </div>
+                <div class="footer-widget">
+                    <h4>Categories</h4>
+                    <div class="footer-links">
+                        <a href="shop.html?category=cardio"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Cardio Equipment</a>
+                        <a href="shop.html?category=strength"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Strength Training</a>
+                        <a href="shop.html?category=weights"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Free Weights</a>
+                        <a href="shop.html?category=yoga"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Yoga and Recovery</a>
+                        <a href="shop.html?category=accessories"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Accessories</a>
+                    </div>
+                </div>
+                <div class="footer-widget">
+                    <h4>Business Contact</h4>
+                    <p><i class="fas fa-map-marker-alt" style="color: var(--accent); margin-right: 8px;"></i> 123 Fitness Ave, Lahore, Pakistan</p>
+                    <p><i class="fas fa-phone-alt" style="color: var(--accent); margin-right: 8px;"></i> +92 300 1234567</p>
+                    <p><i class="fas fa-envelope" style="color: var(--accent); margin-right: 8px;"></i> info@fitgear.pk</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 FitGear Pakistan. All rights reserved.</p>
+                <div class="payment-badges-row">
+                    <span title="Cash on Delivery"><i class="fas fa-hand-holding-usd"></i> Cash on Delivery</span>
+                    <span title="Direct Bank Transfer"><i class="fas fa-university"></i> Bank Transfer</span>
+                    <span title="WhatsApp Orders"><i class="fab fa-whatsapp"></i> WhatsApp Order</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('contact-name').value.trim();
+            const phone = document.getElementById('contact-phone').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const subject = document.getElementById('contact-subject').value;
+            const message = document.getElementById('contact-msg').value.trim();
+
+            const noticeBox = document.getElementById('contact-form-notice');
+            if (noticeBox) {
+                noticeBox.style.display = 'block';
+                noticeBox.innerHTML = `
+                    <strong style="color: var(--success);"><i class="fas fa-check-circle"></i> Message Validated:</strong> Thank you, <strong>${escapeHTML(name)}</strong>!
+                    <br><br>
+                    <small><em>Note: This website is running as a static frontend deployment without an active backend mail server. Your inquiry has been stored locally in your browser session. For an immediate reply, you can also forward this directly via WhatsApp or Email:</em></small>
+                    <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;">
+                        <a href="https://wa.me/923001234567?text=${encodeURIComponent('Hi FitGear, my name is ' + name + ' (' + email + '). Subject: ' + subject + ' - Message: ' + message)}" target="_blank" class="btn btn-whatsapp btn-sm">
+                            <i class="fab fa-whatsapp"></i> Forward on WhatsApp
+                        </a>
+                        <a href="mailto:info@fitgear.pk?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('Name: ' + name + '\nPhone: ' + phone + '\nEmail: ' + email + '\n\n' + message)}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-envelope"></i> Send via Email App
+                        </a>
+                    </div>
+                `;
+            }
+            showToast('Inquiry recorded locally. See notice below to contact directly.', 'info');
+        }
+    </script>
+</body>
+</html>

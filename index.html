@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitGear Pakistan | Premium Gym Equipment & Fitness Accessories</title>
+    <meta name="description" content="FitGear Pakistan offers high-quality commercial gym equipment, adjustable dumbbells, motorized treadmills, power racks, and accessories with nationwide Cash on Delivery.">
+    <meta name="keywords" content="gym equipment pakistan, buy dumbbells lahore, treadmills karachi, weights islamabad, fitgear pakistan, home gym setup">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Top Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container announcement-content">
+            <div class="announcement-ticker">
+                <i class="fas fa-truck-moving"></i>
+                <span><strong>FREE SHIPPING</strong> across Pakistan on orders over PKR 5,000 | Cash on Delivery (COD) Available</span>
+            </div>
+            <div class="announcement-contact">
+                <a href="tel:+923001234567"><i class="fas fa-phone-alt"></i> +92 300 1234567</a>
+                <a href="contact.html"><i class="fas fa-envelope"></i> info@fitgear.pk</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daraz Top Utility Bar -->
+    <div class="daraz-bar">
+        <div class="container daraz-bar-content">
+            <div class="daraz-links">
+                <a href="#flash-deals" class="highlight"><i class="fas fa-bolt"></i> Flash Deals</a>
+                <a href="#vouchers-section"><i class="fas fa-ticket-alt"></i> Collectible Vouchers</a>
+                <a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a>
+                <a href="contact.html"><i class="fas fa-headset"></i> Customer Care</a>
+                <a href="about.html"><i class="fas fa-shield-alt"></i> 100% Authentic Guarantee</a>
+            </div>
+            <div class="daraz-auth-controls" id="header-auth-section">
+                <!-- Dynamically populated by updateAuthUI() in script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                    FITGEAR <span>PK</span>
+                </a>
+            </div>
+
+            <!-- Standard 5 Navigation Items: Home, Shop, About, Contact, Cart -->
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <div class="header-search">
+                    <input type="text" id="header-search-input" placeholder="Search gym equipment..." autocomplete="off">
+                    <button type="button" aria-label="Search"><i class="fas fa-search"></i></button>
+                    <div class="search-results-dropdown" id="search-dropdown"></div>
+                </div>
+
+                <a href="wishlist.html" class="action-btn" title="Saved Wishlist" aria-label="Wishlist">
+                    <i class="far fa-heart"></i>
+                    <span class="action-count wishlist-count" id="wishlist-count" style="display: none;">0</span>
+                </a>
+
+                <button type="button" class="action-btn" onclick="openCartDrawer()" title="View Cart" aria-label="Shopping Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="action-count cart-count" id="cart-count" style="display: none;">0</span>
+                </button>
+
+                <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Slide-in Drawer -->
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-header">
+            <div class="logo">
+                <a href="index.html">
+                    <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                    FITGEAR <span>PK</span>
+                </a>
+            </div>
+            <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
+            <a href="shop.html"><i class="fas fa-store"></i> Shop All Equipment</a>
+            <a href="about.html"><i class="fas fa-info-circle"></i> About FitGear</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i> Shopping Cart</a>
+            <a href="wishlist.html"><i class="fas fa-heart"></i> My Wishlist</a>
+            <a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a>
+        </div>
+        <div class="mobile-nav-footer">
+            <a href="https://wa.me/923001234567" target="_blank" class="btn btn-whatsapp btn-block">
+                <i class="fab fa-whatsapp"></i> WhatsApp Order Support
+            </a>
+        </div>
+    </div>
+
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <!-- Slide-over Mini-Cart Drawer -->
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-drawer-header">
+            <h3><i class="fas fa-shopping-bag" style="color: var(--accent);"></i> Your Shopping Bag</h3>
+            <button class="cart-drawer-close" onclick="closeCartDrawer()" aria-label="Close cart">&times;</button>
+        </div>
+        <div class="cart-drawer-items" id="cart-drawer-items"></div>
+        <div class="cart-drawer-footer">
+            <div class="drawer-subtotal">
+                <span>Subtotal:</span>
+                <span id="drawer-subtotal-price">PKR 0</span>
+            </div>
+            <div class="drawer-buttons">
+                <a href="checkout.html" class="btn btn-primary btn-block">
+                    <i class="fas fa-lock"></i> Proceed to Checkout
+                </a>
+                <a href="cart.html" class="btn btn-secondary btn-block" onclick="closeCartDrawer()">
+                    View Full Cart
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-bg-overlay"></div>
+            <div class="container hero-content-wrapper">
+                <div class="hero-text">
+                    <div class="hero-pill">
+                        <i class="fas fa-shield-alt"></i> Premium Fitness Hardware
+                    </div>
+                    <h1 class="hero-title">
+                        ELEVATE YOUR <br><span class="highlight-red">FITNESS JOURNEY</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        High-quality gym equipment built for durability and performance. Shop heavy-gauge power racks, Olympic free weights, motorized treadmills, and accessories with nationwide Cash on Delivery.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="shop.html" class="btn btn-primary btn-lg">
+                            <i class="fas fa-store"></i> Shop Now
+                        </a>
+                        <a href="https://wa.me/923001234567?text=Hi%20FitGear%20Pakistan%2C%20I%20would%20like%20more%20details%20on%20gym%20equipment" target="_blank" class="btn btn-whatsapp btn-lg">
+                            <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+                        </a>
+                    </div>
+                    <div class="hero-badges-strip">
+                        <div class="hero-stat">
+                            <div class="hero-stat-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="hero-stat-info">
+                                <h4>Quality Assured</h4>
+                                <p>Heavy-Duty Hardware</p>
+                            </div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-icon"><i class="fas fa-truck"></i></div>
+                            <div class="hero-stat-info">
+                                <h4>Reliable Delivery</h4>
+                                <p>All Cities Across Pakistan</p>
+                            </div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-icon"><i class="fas fa-headset"></i></div>
+                            <div class="hero-stat-info">
+                                <h4>Direct Support</h4>
+                                <p>WhatsApp & Phone Care</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Visual Showcase -->
+                <div class="hero-visual">
+                    <div class="hero-card">
+                        <div class="hero-floating-badge">
+                            <i class="fas fa-star" style="color: #ffd700;"></i> FEATURED GEAR
+                        </div>
+                        <img src="images/dumbbell_set.jpg" alt="Rapid Dial Adjustable Dumbbells">
+                        <div class="hero-card-meta">
+                            <div>
+                                <h4>Adjustable Dumbbells Set</h4>
+                                <p style="margin-bottom: 0; font-size: 0.85rem; color: var(--text-muted);">2.5kg to 24kg Rapid Select</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-family: var(--font-heading); font-size: 1.3rem; font-weight: 800; color: var(--accent);">PKR 18,500</div>
+                                <span class="badge badge-success">In Stock</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customer Benefits Section -->
+        <section class="trust-strip">
+            <div class="container trust-grid">
+                <div class="trust-item">
+                    <div class="trust-icon"><i class="fas fa-money-bill-wave"></i></div>
+                    <div class="trust-info">
+                        <h4>Cash on Delivery</h4>
+                        <p>Pay cash when your equipment arrives at your door</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon"><i class="fas fa-dumbbell"></i></div>
+                    <div class="trust-info">
+                        <h4>Reliable Build Quality</h4>
+                        <p>Durable steel frames & wear-resistant materials</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon"><i class="fas fa-shipping-fast"></i></div>
+                    <div class="trust-info">
+                        <h4>Nationwide Shipping</h4>
+                        <p>Carefully packed delivery to all cities across Pakistan</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon"><i class="fas fa-user-shield"></i></div>
+                    <div class="trust-info">
+                        <h4>Customer Support</h4>
+                        <p>Direct assistance via WhatsApp and helpline</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daraz Flash Deals Section with Live Countdown -->
+        <section class="flash-deals-section" id="flash-deals">
+            <div class="container">
+                <div class="flash-deals-header">
+                    <div class="flash-title-wrap">
+                        <h3><i class="fas fa-bolt"></i> FLASH DEALS</h3>
+                        <div class="flash-timer">
+                            <span>Ending in:</span>
+                            <span class="timer-digit" id="flash-hrs">08</span> :
+                            <span class="timer-digit" id="flash-min">34</span> :
+                            <span class="timer-digit" id="flash-sec">12</span>
+                        </div>
+                    </div>
+                    <a href="shop.html" class="btn btn-secondary btn-sm">Shop All Deals <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="product-grid" id="flash-deals-grid">
+                    <!-- Populated dynamically by script.js from SQLite -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Daraz Collectible Vouchers Hub -->
+        <section class="vouchers-section" id="vouchers-section">
+            <div class="container">
+                <div class="section-header" style="margin-bottom: 24px;">
+                    <span class="sub-title">Discounts & Savings</span>
+                    <h2>Collectible Discount Vouchers</h2>
+                    <p>Collect vouchers to your digital wallet. Discounts are automatically deducted at checkout!</p>
+                </div>
+                <div class="vouchers-grid" id="vouchers-grid">
+                    <!-- Populated dynamically by script.js from SQLite -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Categories: Cardio Equipment, Strength Training, Free Weights, Yoga and Recovery, Accessories -->
+        <section class="categories-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="sub-title">Explore Categories</span>
+                    <h2>Find Equipment for Your Routine</h2>
+                    <p>Select a category to browse tailored fitness and strength training gear.</p>
+                </div>
+                <div class="category-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                    <a href="shop.html?category=cardio" class="category-card" style="height: 250px;">
+                        <img src="images/treadmill.jpg" alt="Cardio Equipment">
+                        <div class="category-overlay">
+                            <h4>Cardio Equipment</h4>
+                            <p>Treadmills, Bikes & Rowers <i class="fas fa-arrow-right"></i></p>
+                        </div>
+                    </a>
+                    <a href="shop.html?category=strength" class="category-card" style="height: 250px;">
+                        <img src="images/workout_bench.jpg" alt="Strength Training">
+                        <div class="category-overlay">
+                            <h4>Strength Training</h4>
+                            <p>Benches & Power Racks <i class="fas fa-arrow-right"></i></p>
+                        </div>
+                    </a>
+                    <a href="shop.html?category=weights" class="category-card" style="height: 250px;">
+                        <img src="images/dumbbell_set.jpg" alt="Free Weights">
+                        <div class="category-overlay">
+                            <h4>Free Weights</h4>
+                            <p>Dumbbells & Barbells <i class="fas fa-arrow-right"></i></p>
+                        </div>
+                    </a>
+                    <a href="shop.html?category=yoga" class="category-card" style="height: 250px;">
+                        <img src="images/yoga_mat.jpg" alt="Yoga and Recovery">
+                        <div class="category-overlay">
+                            <h4>Yoga & Recovery</h4>
+                            <p>Mats & Core Rollers <i class="fas fa-arrow-right"></i></p>
+                        </div>
+                    </a>
+                    <a href="shop.html?category=accessories" class="category-card" style="height: 250px;">
+                        <img src="images/resistance_bands.jpg" alt="Accessories">
+                        <div class="category-overlay">
+                            <h4>Accessories</h4>
+                            <p>Belts, Gloves & Bands <i class="fas fa-arrow-right"></i></p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section class="products-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="sub-title">Best Sellers & Popular Items</span>
+                    <h2>Featured Equipment</h2>
+                    <p>Explore some of our most requested gym equipment, available for immediate order.</p>
+                </div>
+
+                <div class="product-grid" id="featured-products-grid">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+
+                <div style="text-align: center; margin-top: 50px;">
+                    <a href="shop.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-th-large"></i> View All Equipment in Shop
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Promotional Deal Section -->
+        <section class="deal-section">
+            <div class="container">
+                <div class="deal-card">
+                    <div class="deal-content">
+                        <span class="badge badge-accent" style="width: fit-content; margin-bottom: 12px;">Promotional Special</span>
+                        <h2>Home Workout Strength Bundle</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                            Combine our Multi-Angle Workout Bench with Rapid-Dial Adjustable Dumbbells to build a versatile full-body workout station at home.
+                        </p>
+                        <div class="countdown-grid">
+                            <div class="countdown-box">
+                                <span class="num" id="cd-days">03</span>
+                                <span class="lbl">Days</span>
+                            </div>
+                            <div class="countdown-box">
+                                <span class="num" id="cd-hours">14</span>
+                                <span class="lbl">Hours</span>
+                            </div>
+                            <div class="countdown-box">
+                                <span class="num" id="cd-minutes">42</span>
+                                <span class="lbl">Mins</span>
+                            </div>
+                            <div class="countdown-box">
+                                <span class="num" id="cd-seconds">19</span>
+                                <span class="lbl">Secs</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                            <a href="shop.html" class="btn btn-primary">
+                                <i class="fas fa-shopping-cart"></i> View Promotional Items
+                            </a>
+                            <a href="https://wa.me/923001234567?text=Hi%20FitGear%2C%20I'd%20like%20to%20ask%20about%20your%20promotional%20bundles" target="_blank" class="btn btn-whatsapp">
+                                <i class="fab fa-whatsapp"></i> Inquire on WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                    <div class="deal-image-wrap">
+                        <img src="images/deal_banner.jpg" alt="Home Gym Workout Station">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customer Commitment & Quality Standards (No Invented Reviews) -->
+        <section class="testimonials-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="sub-title">Our Commitment</span>
+                    <h2>Quality Standards & Customer Guarantee</h2>
+                    <p>We believe in honest representation and dependable service for every customer in Pakistan.</p>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-quote"><i class="fas fa-clipboard-check"></i></div>
+                        <h4 style="margin-bottom: 8px;">Pre-Dispatch Inspection</h4>
+                        <p class="testimonial-text" style="font-style: normal;">
+                            Every barbell, bench, and treadmill motor is verified for structural integrity, correct dimensions, and secure packaging before being handed over to couriers.
+                        </p>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-quote"><i class="fas fa-shield-alt"></i></div>
+                        <h4 style="margin-bottom: 8px;">Clear Product Warranty</h4>
+                        <p class="testimonial-text" style="font-style: normal;">
+                            Motorized treadmills and structural equipment include clear warranty coverage. If you ever need parts or technical guidance, our support team is directly reachable.
+                        </p>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-quote"><i class="fas fa-handshake"></i></div>
+                        <h4 style="margin-bottom: 8px;">Transparent Communication</h4>
+                        <p class="testimonial-text" style="font-style: normal;">
+                            We provide real item photos, accurate product weights, and direct phone/WhatsApp contact so you always know exactly what equipment you are purchasing.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Verified Customer Reviews from Database -->
+                <div class="section-header" style="margin-top: 50px;">
+                    <span class="sub-title">Database Verified Feedback</span>
+                    <h2>Customer Reviews from Real Orders</h2>
+                    <p>Genuine feedback submitted by verified customers across Pakistan.</p>
+                </div>
+                <div class="testimonials-grid" id="homepage-reviews-container">
+                    <!-- Populated dynamically from SQLite database -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter & Promo Voucher Section -->
+        <section class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-card">
+                    <div class="newsletter-info">
+                        <h3>Stay Updated with FitGear Pakistan</h3>
+                        <p style="margin-bottom: 0;">Subscribe to receive updates on newly arrived gear and discount vouchers. Use code <strong>WELCOME500</strong> for PKR 500 off your first cart!</p>
+                    </div>
+                    <form class="newsletter-form" onsubmit="event.preventDefault(); showToast('Thank you! Your promo code WELCOME500 is active for PKR 500 off at checkout.', 'success'); this.reset();">
+                        <input type="email" placeholder="Enter your email address..." required>
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Quick View Modal Container -->
+    <div class="modal-overlay" id="quick-view-modal">
+        <div class="modal-card quick-view-card">
+            <button class="modal-close-btn" onclick="closeQuickView()" aria-label="Close modal">&times;</button>
+            <div id="quick-view-content" style="display: contents;"></div>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Widget -->
+    <a href="https://wa.me/923001234567?text=Hi%20FitGear%20Pakistan%2C%20I%20have%20an%20inquiry%20about%20your%20gym%20equipment." class="floating-whatsapp" target="_blank" aria-label="WhatsApp Support">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="mobile-bottom-nav">
+        <ul>
+            <li><a href="index.html" class="active"><i class="fas fa-home"></i><span>Home</span></a></li>
+            <li><a href="shop.html"><i class="fas fa-store"></i><span>Shop</span></a></li>
+            <li><a href="about.html"><i class="fas fa-info-circle"></i><span>About</span></a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i><span>Contact</span></a></li>
+            <li><a href="cart.html"><i class="fas fa-shopping-bag"></i><span>Cart</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Footer with Useful Navigation and Exact Contact Info -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-widget">
+                    <div class="logo" style="margin-bottom: 16px;">
+                        <a href="index.html">
+                            <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                            FITGEAR <span>PK</span>
+                        </a>
+                    </div>
+                    <p>FitGear Pakistan is dedicated to providing reliable, durable, and affordable fitness equipment to athletes and workout enthusiasts across Pakistan.</p>
+                </div>
+
+                <div class="footer-widget">
+                    <h4>Navigation</h4>
+                    <div class="footer-links">
+                        <a href="index.html"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Home</a>
+                        <a href="shop.html"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Shop Equipment</a>
+                        <a href="about.html"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> About Us</a>
+                        <a href="contact.html"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Contact Us</a>
+                        <a href="cart.html"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> View Cart</a>
+                    </div>
+                </div>
+
+                <div class="footer-widget">
+                    <h4>Categories</h4>
+                    <div class="footer-links">
+                        <a href="shop.html?category=cardio"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Cardio Equipment</a>
+                        <a href="shop.html?category=strength"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Strength Training</a>
+                        <a href="shop.html?category=weights"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Free Weights</a>
+                        <a href="shop.html?category=yoga"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Yoga and Recovery</a>
+                        <a href="shop.html?category=accessories"><i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> Accessories</a>
+                    </div>
+                </div>
+
+                <div class="footer-widget">
+                    <h4>Business Contact</h4>
+                    <p><i class="fas fa-map-marker-alt" style="color: var(--accent); margin-right: 8px;"></i> 123 Fitness Ave, Lahore, Pakistan</p>
+                    <p><i class="fas fa-phone-alt" style="color: var(--accent); margin-right: 8px;"></i> +92 300 1234567</p>
+                    <p><i class="fas fa-envelope" style="color: var(--accent); margin-right: 8px;"></i> info@fitgear.pk</p>
+                    <p><i class="fas fa-clock" style="color: var(--accent); margin-right: 8px;"></i> Mon - Sat: 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 FitGear Pakistan. All rights reserved.</p>
+                <div class="payment-badges-row">
+                    <span title="Cash on Delivery"><i class="fas fa-hand-holding-usd"></i> Cash on Delivery</span>
+                    <span title="Direct Bank Transfer"><i class="fas fa-university"></i> Bank Transfer</span>
+                    <span title="WhatsApp Orders"><i class="fab fa-whatsapp"></i> WhatsApp Order</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

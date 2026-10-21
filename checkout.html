@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | FitGear Pakistan</title>
+    <meta name="description" content="Complete your gym equipment order with Cash on Delivery or Direct Bank Transfer at FitGear Pakistan.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container announcement-content">
+            <div class="announcement-ticker">
+                <i class="fas fa-shield-alt"></i>
+                <span><strong>ORDER VERIFICATION:</strong> Cash on Delivery (COD) Available Nationwide Across Pakistan.</span>
+            </div>
+            <div class="announcement-contact">
+                <a href="tel:+923001234567"><i class="fas fa-phone-alt"></i> Helpline: +92 300 1234567</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daraz Top Utility Bar -->
+    <div class="daraz-bar">
+        <div class="container daraz-bar-content">
+            <div class="daraz-links">
+                <a href="index.html#flash-deals" class="highlight"><i class="fas fa-bolt"></i> Flash Deals</a>
+                <a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a>
+                <a href="contact.html"><i class="fas fa-headset"></i> Customer Care</a>
+                <a href="about.html"><i class="fas fa-shield-alt"></i> 100% Authentic Guarantee</a>
+            </div>
+            <div class="daraz-auth-controls" id="header-auth-section">
+                <!-- Dynamically populated by updateAuthUI() in script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                    FITGEAR <span>PK</span>
+                </a>
+            </div>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <a href="wishlist.html" class="action-btn" title="Saved Wishlist" aria-label="Wishlist">
+                    <i class="far fa-heart"></i>
+                    <span class="action-count wishlist-count" id="wishlist-count" style="display: none;">0</span>
+                </a>
+
+                <a href="cart.html" class="action-btn" title="View Cart" aria-label="Shopping Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="action-count cart-count" id="cart-count" style="display: none;">0</span>
+                </a>
+
+                <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Slide-in Drawer -->
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-header">
+            <div class="logo">
+                <a href="index.html">
+                    <div class="logo-icon"><i class="fas fa-dumbbell"></i></div>
+                    FITGEAR <span>PK</span>
+                </a>
+            </div>
+            <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="shop.html"><i class="fas fa-store"></i> Shop All Products</a>
+            <a href="about.html"><i class="fas fa-info-circle"></i> About FitGear</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+            <a href="wishlist.html"><i class="fas fa-heart"></i> My Wishlist</a>
+            <a href="track-order.html"><i class="fas fa-truck"></i> Track Order</a>
+        </div>
+    </div>
+
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <main>
+        <section class="checkout-page-section">
+            <div class="container">
+                <div class="section-header" style="text-align: left; margin-bottom: 30px;">
+                    <div class="shop-breadcrumb">
+                        <a href="index.html">Home</a>
+                        <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+                        <a href="cart.html">Cart</a>
+                        <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+                        <span>Checkout</span>
+                    </div>
+                    <h2>Delivery Details & Order Confirmation</h2>
+                </div>
+
+                <div class="checkout-grid">
+                    <!-- Form Column -->
+                    <div class="checkout-form-column">
+                        <form id="checkout-form">
+                            <!-- Shipping Details Box -->
+                            <div class="checkout-box">
+                                <h3><i class="fas fa-map-marker-alt" style="color: var(--accent);"></i> Delivery Information</h3>
+
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label for="co-name">Full Name <span class="required">*</span></label>
+                                        <input type="text" id="co-name" placeholder="Full Name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="co-phone">Phone / WhatsApp Number <span class="required">*</span></label>
+                                        <input type="tel" id="co-phone" placeholder="03001234567" pattern="03[0-9]{9}" title="Enter a valid 11-digit Pakistani phone number (e.g. 03001234567)" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="co-email">Email Address <span class="required">*</span></label>
+                                    <input type="email" id="co-email" placeholder="name@example.com" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="co-address">Delivery Address (House/Street/Area) <span class="required">*</span></label>
+                                    <input type="text" id="co-address" placeholder="e.g. House #14, Street 6, Sector F-8/2" required>
+                                </div>
+
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label for="co-city">City <span class="required">*</span></label>
+                                        <select id="co-city" required>
+                                            <option value="">Select City</option>
+                                            <option value="Lahore">Lahore</option>
+                                            <option value="Karachi">Karachi</option>
+                                            <option value="Islamabad">Islamabad</option>
+                                            <option value="Rawalpindi">Rawalpindi</option>
+                                            <option value="Faisalabad">Faisalabad</option>
+                                            <option value="Multan">Multan</option>
+                                            <option value="Peshawar">Peshawar</option>
+                                            <option value="Quetta">Quetta</option>
+                                            <option value="Sialkot">Sialkot</option>
+                                            <option value="Gujranwala">Gujranwala</option>
+                                            <option value="Hyderabad">Hyderabad</option>
+                                            <option value="Abbottabad">Abbottabad</option>
+                                            <option value="Bahawalpur">Bahawalpur</option>
+                                            <option value="Sargodha">Sargodha</option>
+                                            <option value="Other City">Other City (All Pakistan)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="co-province">Province <span class="required">*</span></label>
+                                        <select id="co-province" required>
+                                            <option value="Punjab">Punjab</option>
+                                            <option value="Sindh">Sindh</option>
+                                            <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa (KPK)</option>
+                                            <option value="Balochistan">Balochistan</option>
+                                            <option value="Islamabad Capital Territory">Islamabad Capital Territory</option>
+                                            <option value="Azad Kashmir">Azad Kashmir</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="co-postal">Postal Code (Optional)</label>
+                                    <input type="text" id="co-postal" placeholder="e.g. 54000">
+                                </div>
+
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label for="co-notes">Delivery Instructions (Optional)</label>
+                                    <textarea id="co-notes" rows="2" placeholder="e.g. Call before delivery..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Payment Selection Box (No Card Inputs Collected) -->
+                            <div class="checkout-box">
+                                <h3><i class="fas fa-money-check" style="color: var(--accent);"></i> Payment Method</h3>
+
+                                <div class="payment-methods-grid">
+                                    <!-- Cash on Delivery -->
+                                    <label class="payment-method-label selected">
+                                        <div class="payment-method-left">
+                                            <input type="radio" name="payment_method" value="cod" checked>
+                                            <div class="payment-method-info">
+                                                <h4>Cash on Delivery (COD)</h4>
+                                                <p>Pay cash directly to the delivery rider upon package arrival.</p>
+                                            </div>
+                                        </div>
+                                        <i class="fas fa-hand-holding-usd payment-icon-badge"></i>
+                                    </label>
+                                    <div class="payment-details-accordion active" id="payment-details-cod">
+                                        <i class="fas fa-check-circle" style="color: var(--success);"></i> No advance payment required for standard items. Please keep the exact amount ready in PKR.
+                                    </div>
+
+                                    <!-- Direct Bank Transfer Instructions -->
+                                    <label class="payment-method-label">
+                                        <div class="payment-method-left">
+                                            <input type="radio" name="payment_method" value="bank">
+                                            <div class="payment-method-info">
+                                                <h4>Direct Bank Transfer / Raast</h4>
+                                                <p>Transfer via your mobile banking app to our official account.</p>
+                                            </div>
+                                        </div>
+                                        <i class="fas fa-university payment-icon-badge"></i>
+                                    </label>
+                                    <div class="payment-details-accordion" id="payment-details-bank">
+                                        <div><strong>Bank:</strong> Meezan Bank Limited</div>
+                                        <div><strong>Account Title:</strong> FitGear Pakistan</div>
+                                        <div><strong>IBAN:</strong> PK36MEZN0002840105829182</div>
+                                        <p style="margin-top: 6px; margin-bottom: 0; color: var(--text-muted);">
+                                            Please share transfer reference on WhatsApp (+92 300 1234567) after submitting.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block btn-lg" id="checkout-submit-btn">
+                                <i class="fas fa-check-circle"></i> Place Order
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Order Summary Column -->
+                    <div class="checkout-summary-column">
+                        <div class="checkout-box">
+                            <h3><i class="fas fa-clipboard-list" style="color: var(--accent);"></i> Order Review</h3>
+
+                            <div class="checkout-items-list" id="checkout-items-list">
+                                <!-- Populated dynamically by JavaScript -->
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span id="co-subtotal">PKR 0</span>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Discount:</span>
+                                <span id="co-discount" style="color: var(--success);">-PKR 0</span>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Shipping:</span>
+                                <span id="co-shipping">PKR 0</span>
+                            </div>
+
+                            <div class="summary-row total-row">
+                                <span>Total Payable:</span>
+                                <span id="co-total">PKR 0</span>
+                            </div>
+
+                            <div style="margin-top: 24px; padding: 14px; background: var(--bg-surface); border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6;">
+                                <div style="font-weight: 700; color: #fff; margin-bottom: 6px;">
+                                    <i class="fas fa-truck" style="color: var(--accent);"></i> Shipping Timeline:
+                                </div>
+                                Deliveries in Lahore take 24–48 hours. Nationwide deliveries to Karachi, Islamabad, and other cities take 2–4 business days via courier services.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Order Success Modal Container -->
+    <div class="modal-overlay" id="order-success-modal">
+        <div class="modal-card">
+            <button class="modal-close-btn" onclick="document.getElementById('order-success-modal').classList.remove('active')" aria-label="Close modal">&times;</button>
+            <div id="order-success-content">
+                <!-- Dynamically populated with receipt details -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Widget -->
+    <a href="https://wa.me/923001234567?text=Hi%20FitGear%20Pakistan%2C%20I%20have%20an%20order%20question." class="floating-whatsapp" target="_blank" aria-label="WhatsApp Support">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 FitGear Pakistan. All rights reserved.</p>
+                <div class="payment-badges-row">
+                    <span title="Cash on Delivery"><i class="fas fa-hand-holding-usd"></i> Cash on Delivery</span>
+                    <span title="Direct Bank Transfer"><i class="fas fa-university"></i> Bank Transfer</span>
+                    <span title="WhatsApp Orders"><i class="fab fa-whatsapp"></i> WhatsApp Order</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
