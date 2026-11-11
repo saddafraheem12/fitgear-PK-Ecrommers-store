@@ -10,8 +10,14 @@ package-lock.json
 *.key
 
 # SQLite Database & Write-Ahead Logs
+*.sqlite
+*.sqlite3
+*.db
+fitgear.sqlite
 fitgear.sqlite-shm
 fitgear.sqlite-wal
+*.sqlite-wal
+*.sqlite-shm
 *.db-journal
 
 # Operating System Files

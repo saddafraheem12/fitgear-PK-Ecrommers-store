@@ -4,7 +4,12 @@
  * Powered by Node.js, SQLite (node:sqlite), and Vanilla JavaScript
  */
 
-const API_BASE = (window.location.protocol.startsWith('http')) ? '' : 'http://localhost:3000';
+// Dynamic API Base URL resolution via js/config.js or intelligent environment detection
+const API_BASE = (window.FITGEAR_CONFIG && typeof window.FITGEAR_CONFIG.getApiUrl === 'function')
+    ? window.FITGEAR_CONFIG.getApiUrl()
+    : ((typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+        ? (window.location.port === '3000' ? '' : 'http://localhost:3000')
+        : 'https://fitgear-pk.onrender.com');
 
 // Global State
 let products = [];
@@ -17,7 +22,7 @@ let appliedVoucher = null;
 let collectedVouchers = [];
 let isOrderSubmitting = false;
 
-const whatsappNumber = '923001234567';
+const whatsappNumber = '923000000000';
 
 // Safe HTML Escaping Utility
 function escapeHTML(str) {
@@ -253,7 +258,7 @@ function openAuthModal(tab = 'login') {
                     </div>
                     <div class="form-group">
                         <label>Phone Number (WhatsApp)</label>
-                        <input type="tel" id="reg-phone" placeholder="03001234567" required>
+                        <input type="tel" id="reg-phone" placeholder="03000000000" required>
                     </div>
                     <div class="form-group">
                         <label>Password (min 6 characters)</label>
@@ -837,7 +842,7 @@ async function openQuickView(id) {
             </div>
             <h3>${escapeHTML(product.name)}</h3>
             <div style="font-size: 0.85rem; color: var(--success); margin-bottom: 8px;">
-                <i class="fas fa-check-circle"></i> In Stock (${product.stock_count} units ready to ship from Lahore Hub)
+                <i class="fas fa-check-circle"></i> In Stock (${product.stock_count} units ready to ship from Karachi Hub)
             </div>
             <div class="qv-price">
                 ${formatPKR(product.price)}
@@ -1329,7 +1334,7 @@ function initTrackOrderPage() {
                     <div class="timeline-step ${currentIdx >= 1 ? 'completed' : (currentIdx === 0 ? 'active' : '')}">
                         <div class="step-icon"><i class="fas fa-box-open"></i></div>
                         <div class="step-content">
-                            <h4>Packed at Lahore Central Hub</h4>
+                            <h4>Packed at Karachi Central Hub</h4>
                             <p>Reinforced foam protection applied for fitness equipment shipment.</p>
                         </div>
                     </div>
@@ -2095,8 +2100,8 @@ async function initProductDetailPage() {
                     </div>
                     <label style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px; display: block;">Select Destination City:</label>
                     <select id="p-delivery-city" onchange="updateDeliveryEstimate(this.value, ${p.price})">
-                        <option value="Lahore" selected>Lahore (Main Hub - 24 Hours)</option>
-                        <option value="Karachi">Karachi (TCS/Trax - 2 to 3 Business Days)</option>
+                        <option value="Karachi" selected>Karachi (Main Hub - 24 Hours)</option>
+                        <option value="Lahore">Lahore (TCS/Trax - 1 to 2 Business Days)</option>
                         <option value="Islamabad">Islamabad / Rawalpindi (1 to 2 Business Days)</option>
                         <option value="Faisalabad">Faisalabad (1 to 2 Business Days)</option>
                         <option value="Multan">Multan (2 Business Days)</option>
@@ -2198,7 +2203,7 @@ async function initProductDetailPage() {
                                 </div>
                                 <div class="form-group">
                                     <label>Your City</label>
-                                    <input type="text" id="p-rev-city" placeholder="Lahore / Karachi" required value="${currentUser ? escapeHTML(currentUser.city || 'Lahore') : 'Lahore'}">
+                                    <input type="text" id="p-rev-city" placeholder="Karachi / Lahore" required value="${currentUser ? escapeHTML(currentUser.city || 'Karachi') : 'Karachi'}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -2242,7 +2247,7 @@ async function initProductDetailPage() {
                             <div class="trust-icon"><i class="fas fa-tools"></i></div>
                             <div class="trust-info">
                                 <h4>Official Parts Support</h4>
-                                <p>Lahore workshop stocks replacement cables, pulleys, and motor brushes.</p>
+                                <p>Karachi workshop stocks replacement cables, pulleys, and motor brushes.</p>
                             </div>
                         </div>
                     </div>
@@ -2303,10 +2308,10 @@ function updateDeliveryEstimate(city, price) {
     const badge = document.getElementById('p-delivery-badge');
     if (!desc || !badge) return;
 
-    if (city === 'Lahore') {
-        desc.textContent = 'Lahore Central Hub: Express 24-Hour Doorstep Delivery via TCS / Trax. COD available.';
+    if (city === 'Karachi') {
+        desc.textContent = 'Karachi Central Hub: Express 24-Hour Doorstep Delivery via TCS / Trax. COD available.';
         badge.textContent = price >= 5000 ? 'Free Shipping' : 'PKR 300 Delivery';
-    } else if (city === 'Karachi' || city === 'Islamabad') {
+    } else if (city === 'Lahore' || city === 'Islamabad') {
         desc.textContent = `${city}: Express Courier Dispatch (1 to 2 Business Days). COD available.`;
         badge.textContent = price >= 5000 ? 'Free Shipping' : 'PKR 500 Delivery';
     } else {
@@ -2470,7 +2475,7 @@ async function initAccountPage() {
                             </div>
                             <div class="form-group">
                                 <label>City</label>
-                                <input type="text" id="acc-city" value="${escapeHTML(currentUser.city || 'Lahore')}" required>
+                                <input type="text" id="acc-city" value="${escapeHTML(currentUser.city || 'Karachi')}" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -2581,8 +2586,8 @@ async function printOrderInvoice(orderNumber) {
             <div class="invoice-header">
                 <div>
                     <h2 style="font-size: 1.8rem; font-weight: 900; color: #d32f2f; margin-bottom: 2px;">FITGEAR PAKISTAN</h2>
-                    <p style="font-size: 0.85rem; color: #4b5563; margin-bottom: 0;">123 Fitness Ave, Lahore, Pakistan</p>
-                    <p style="font-size: 0.82rem; color: #6b7280; margin-bottom: 0;">NTN: 8931204-7 &bull; STRN: 3277876192138 &bull; Phone: +92 300 1234567</p>
+                    <p style="font-size: 0.85rem; color: #4b5563; margin-bottom: 0;">Saddar, Karachi, Sindh, Pakistan (Demo)</p>
+                    <p style="font-size: 0.82rem; color: #6b7280; margin-bottom: 0;">NTN: 8931204-7 &bull; STRN: 3277876192138 &bull; Phone: +92 300 0000000</p>
                 </div>
                 <div style="text-align: right;">
                     <h3 style="font-size: 1.2rem; color: #111; margin-bottom: 4px;">SALES TAX INVOICE</h3>
@@ -2653,7 +2658,7 @@ async function printOrderInvoice(orderNumber) {
             <div style="margin-top: 36px; padding-top: 16px; border-top: 1px dashed #d1d5db; display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.78rem; color: #6b7280;">
                 <div>
                     <p style="margin-bottom: 2px;">This is an official computer generated commercial sales tax invoice from FitGear Pakistan.</p>
-                    <p style="margin-bottom: 0;">For warranty claims or part assistance, WhatsApp +92 300 1234567.</p>
+                    <p style="margin-bottom: 0;">For warranty claims or part assistance, WhatsApp +92 300 0000000.</p>
                 </div>
                 <div style="text-align: center; border-top: 1px solid #9ca3af; padding-top: 4px; width: 140px;">
                     Authorized Signature

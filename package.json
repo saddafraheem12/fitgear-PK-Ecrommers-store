@@ -4,6 +4,10 @@
   "description": "FitGear Pakistan - Full-Stack Real Database-Backed E-Commerce Store Inspired by Daraz Pakistan",
   "main": "server.js",
   "scripts": {
+    "build": "node -v",
     "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
   }
 }

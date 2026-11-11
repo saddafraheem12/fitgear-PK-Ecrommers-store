@@ -31,7 +31,49 @@ if (fs.existsSync(envPath)) {
 }
 
 const PORT = process.env.PORT || 3000;
-const DB_PATH = process.env.DB_PATH ? path.resolve(__dirname, process.env.DB_PATH) : path.join(__dirname, 'fitgear.sqlite');
+const rawDbPath = process.env.DB_PATH || 'fitgear.sqlite';
+const DB_PATH = path.isAbsolute(rawDbPath) ? rawDbPath : path.resolve(__dirname, rawDbPath);
+
+// Ensure the directory for the database file exists (crucial for Render persistent disk mounts e.g. /var/data)
+const dbDir = path.dirname(DB_PATH);
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+}
+
+// Allowed CORS origins for production (Netlify) & local development
+const ALLOWED_ORIGINS = [
+    'https://fitgear-pk.netlify.app',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:5500',
+    'http://127.0.0.1:5500',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173'
+];
+
+if (process.env.ALLOWED_ORIGINS) {
+    const extra = process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim()).filter(Boolean);
+    ALLOWED_ORIGINS.push(...extra);
+}
+
+function getCorsHeaders(req) {
+    const origin = req && req.headers ? req.headers['origin'] : null;
+    let allowOrigin = '*';
+    if (origin) {
+        if (ALLOWED_ORIGINS.includes(origin) || origin.endsWith('.netlify.app') || process.env.NODE_ENV !== 'production') {
+            allowOrigin = origin;
+        } else {
+            allowOrigin = origin;
+        }
+    }
+    return {
+        'Access-Control-Allow-Origin': allowOrigin,
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Auth-Token, Origin, X-Requested-With, Accept',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+        'Access-Control-Allow-Credentials': allowOrigin !== '*' ? 'true' : 'false',
+        'Access-Control-Max-Age': '86400'
+    };
+}
 
 // --- 1. DATABASE INITIALIZATION & SCHEMA ---
 const db = new DatabaseSync(DB_PATH);
@@ -161,7 +203,7 @@ const PAYMENT_GATEWAYS = {
         name: 'Direct Bank Transfer / Raast',
         status: 'active',
         type: 'manual',
-        description: 'Meezan Bank Raast transfer with manual verification on WhatsApp (+92 300 1234567).',
+        description: 'Meezan Bank Raast transfer with manual verification on WhatsApp (+92 300 0000000).',
         bank_details: {
             bank: 'Meezan Bank Limited',
             title: 'FitGear Pakistan',
@@ -268,8 +310,11 @@ function seedDatabase() {
         console.log('Seeding initial FitGear Pakistan database...');
 
         // Seed Users
+        const adminEmail = process.env.ADMIN_EMAIL || 'admin@fitgear.pk';
+        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+        const adminName = process.env.ADMIN_NAME || 'Admin FitGear';
         const insertUser = db.prepare('INSERT INTO users (name, email, phone, password_hash, role, city) VALUES (?, ?, ?, ?, ?, ?)');
-        insertUser.run('Admin FitGear', 'admin@fitgear.pk', '03001234567', hashPassword('admin123'), 'admin', 'Lahore');
+        insertUser.run(adminName, adminEmail, '03000000000', hashPassword(adminPassword), 'admin', 'Karachi');
         insertUser.run('Demo Customer', 'customer@fitgear.pk', '03217654321', hashPassword('customer123'), 'customer', 'Karachi');
 
         // Seed Categories
@@ -576,11 +621,14 @@ function parseJsonBody(req) {
 }
 
 function sendJson(res, statusCode, data) {
+    const cors = (res && res._corsHeaders) ? res._corsHeaders : {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Auth-Token, Origin, X-Requested-With, Accept',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+    };
     res.writeHead(statusCode, {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Auth-Token',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+        ...cors
     });
     res.end(JSON.stringify(data));
 }
@@ -631,13 +679,13 @@ function serveStaticFile(req, res, pathname) {
 
 // --- 6. API REQUEST ROUTER ---
 const server = http.createServer(async (req, res) => {
+    // Attach CORS headers for current request
+    const corsHeaders = getCorsHeaders(req);
+    res._corsHeaders = corsHeaders;
+
     // Handle CORS preflight
     if (req.method === 'OPTIONS') {
-        res.writeHead(204, {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Auth-Token',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
-        });
+        res.writeHead(204, corsHeaders);
         res.end();
         return;
     }
@@ -646,6 +694,27 @@ const server = http.createServer(async (req, res) => {
     const pathname = parsedUrl.pathname;
     const query = parsedUrl.query;
     const method = req.method;
+
+    // 0. HEALTH CHECK ENDPOINTS (for Render and uptime monitoring)
+    if ((pathname === '/health' || pathname === '/api/health') && method === 'GET') {
+        try {
+            db.prepare('SELECT 1').get();
+            return sendJson(res, 200, {
+                status: 'healthy',
+                service: 'FitGear Pakistan API',
+                timestamp: new Date().toISOString(),
+                uptime_seconds: Math.floor(process.uptime()),
+                database: 'connected',
+                environment: process.env.NODE_ENV || 'production'
+            });
+        } catch (dbErr) {
+            return sendJson(res, 503, {
+                status: 'unhealthy',
+                service: 'FitGear Pakistan API',
+                error: 'Database check failed: ' + dbErr.message
+            });
+        }
+    }
 
     // --- API ROUTES ---
     if (pathname.startsWith('/api/')) {
@@ -666,18 +735,20 @@ const server = http.createServer(async (req, res) => {
                 let sql = 'SELECT * FROM products WHERE 1=1';
                 const params = [];
 
-                if (query.category && query.category !== 'all') {
+                const categoryFilter = query.category || query.cat;
+                if (categoryFilter && categoryFilter !== 'all') {
                     sql += ' AND category_slug = ?';
-                    params.push(query.category);
+                    params.push(categoryFilter);
                 }
 
-                if (query.flash_sale === '1' || query.flash_sale === 'true') {
+                if (query.flash_sale === '1' || query.flash_sale === 'true' || query.flash === '1') {
                     sql += ' AND is_flash_sale = 1';
                 }
 
-                if (query.search) {
+                const searchFilter = query.search || query.q;
+                if (searchFilter) {
                     sql += ' AND (name LIKE ? OR description LIKE ?)';
-                    params.push(`%${query.search}%`, `%${query.search}%`);
+                    params.push(`%${searchFilter}%`, `%${searchFilter}%`);
                 }
 
                 if (query.max_price) {
@@ -859,7 +930,7 @@ const server = http.createServer(async (req, res) => {
                 const result = db.prepare(`
                     INSERT INTO users (name, email, phone, password_hash, role, city, address)
                     VALUES (?, ?, ?, ?, 'customer', ?, ?)
-                `).run(name, email, phone, hashPassword(password), body.city || 'Lahore', body.address || '');
+                `).run(name, email, phone, hashPassword(password), body.city || 'Karachi', body.address || '');
 
                 const newUser = { id: result.lastInsertRowid, name, email, phone, role: 'customer' };
                 const token = generateToken(newUser);
@@ -918,7 +989,7 @@ const server = http.createServer(async (req, res) => {
                 const body = await parseJsonBody(req);
                 const name = (body.name || user.name).trim();
                 const phone = (body.phone || user.phone).trim();
-                const city = (body.city || user.city || 'Lahore').trim();
+                const city = (body.city || user.city || 'Karachi').trim();
                 const address = (body.address || user.address || '').trim();
 
                 db.prepare(`
@@ -954,8 +1025,8 @@ const server = http.createServer(async (req, res) => {
                 const customerPhone = (body.customer_phone || (user ? user.phone : '')).trim();
                 const customerEmail = (body.customer_email || (user ? user.email : '')).trim();
                 const address = (body.shipping_address || body.address || '').trim();
-                const city = (body.city || 'Lahore').trim();
-                const province = (body.province || 'Punjab').trim();
+                const city = (body.city || 'Karachi').trim();
+                const province = (body.province || 'Sindh').trim();
                 const postalCode = body.postal_code || '';
                 const paymentMethod = (body.payment_method || 'COD').toUpperCase();
 
@@ -1123,7 +1194,7 @@ const server = http.createServer(async (req, res) => {
 
                 const id = pathname.split('/')[3];
                 const body = await parseJsonBody(req);
-                const newStatus = (body.status || '').trim();
+                const newStatus = (body.status || body.order_status || '').trim();
 
                 const allowedStatuses = ['Pending', 'Processing', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
                 if (!allowedStatuses.includes(newStatus)) {
@@ -1317,7 +1388,7 @@ const server = http.createServer(async (req, res) => {
                 return sendJson(res, 201, {
                     success: true,
                     inquiry_id: result.lastInsertRowid,
-                    message: `Inquiry #INQ-${result.lastInsertRowid} recorded in FitGear support database. Our Lahore team will contact you via WhatsApp/Phone within 24 hours.`,
+                    message: `Inquiry #INQ-${result.lastInsertRowid} recorded in FitGear support database. Our Karachi team will contact you via WhatsApp/Phone within 24 hours.`,
                     email_forwarded: !!(process.env.SMTP_HOST && process.env.SMTP_USER)
                 });
             }
@@ -1454,12 +1525,37 @@ const server = http.createServer(async (req, res) => {
     serveStaticFile(req, res, pathname);
 });
 
-server.listen(PORT, () => {
+const HOST = process.env.HOST || '0.0.0.0';
+
+server.listen(PORT, HOST, () => {
     console.log(`\n======================================================`);
     console.log(`🚀 FitGear Pakistan (Daraz Edition) Server is Live!`);
-    console.log(`📡 URL: http://localhost:${PORT}`);
+    console.log(`📡 URL: http://${HOST}:${PORT} (bound to ${HOST})`);
     console.log(`💾 SQLite Database: ${DB_PATH}`);
-    console.log(`👤 Admin Account: admin@fitgear.pk / admin123`);
+    console.log(`🌐 Allowed CORS Origins: ${ALLOWED_ORIGINS.join(', ')}`);
+    console.log(`👤 Admin Account: ${process.env.ADMIN_EMAIL || 'admin@fitgear.pk'}`);
     console.log(`🛒 Customer Account: customer@fitgear.pk / customer123`);
     console.log(`======================================================\n`);
 });
+
+// Graceful shutdown handling for Render deployments
+function gracefulShutdown(signal) {
+    console.log(`\nReceived ${signal}. Gracefully shutting down...`);
+    try {
+        if (db) {
+            db.exec('PRAGMA wal_checkpoint(TRUNCATE);');
+            db.close();
+            console.log('SQLite database connection closed cleanly.');
+        }
+    } catch (err) {
+        console.error('Error during database close:', err.message);
+    }
+    server.close(() => {
+        console.log('HTTP server closed.');
+        process.exit(0);
+    });
+    setTimeout(() => process.exit(0), 5000).unref();
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
