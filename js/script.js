@@ -8,8 +8,8 @@
 const API_BASE = (window.FITGEAR_CONFIG && typeof window.FITGEAR_CONFIG.getApiUrl === 'function')
     ? window.FITGEAR_CONFIG.getApiUrl()
     : ((typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
-        ? (window.location.port === '3000' ? '' : 'http://localhost:3000')
-        : 'https://fitgear-pk.onrender.com');
+        ? (window.location.port === '3000' || window.location.port === '8888' ? '' : 'http://localhost:8888')
+        : '');
 
 // Global State
 let products = [];

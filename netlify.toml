@@ -1,0 +1,68 @@
+# ==============================================================================
+# FITGEAR PAKISTAN - NETLIFY CONFIGURATION
+# Production deployment for static frontend and serverless Node.js backend
+# ==============================================================================
+
+[build]
+  # Static frontend root containing index.html, shop.html, js, css, images
+  publish = "."
+  # Netlify Functions directory
+  functions = "netlify/functions"
+  command = "node -v"
+
+[build.environment]
+  # Require Node.js 22 runtime for built-in node:sqlite DatabaseSync support
+  NODE_VERSION = "22"
+  AWS_LAMBDA_JS_RUNTIME = "nodejs22.x"
+
+[functions]
+  # Fast and modern function bundling with esbuild
+  node_bundler = "esbuild"
+  # node:sqlite is compiled into the Node 22 binary, mark as external
+  external_node_modules = ["node:sqlite"]
+  # Package initial SQLite database with the function bundle
+  included_files = ["fitgear.sqlite"]
+
+# ------------------------------------------------------------------------------
+# REDIRECTS & REWRITES
+# ------------------------------------------------------------------------------
+
+# Transparently route /api/* calls to Netlify Function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# Route /health to Netlify Function
+[[redirects]]
+  from = "/health"
+  to = "/.netlify/functions/api/health"
+  status = 200
+  force = true
+
+# ------------------------------------------------------------------------------
+# HTTP SECURITY & CACHING HEADERS
+# ------------------------------------------------------------------------------
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, immutable"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

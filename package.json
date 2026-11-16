@@ -5,9 +5,14 @@
   "main": "server.js",
   "scripts": {
     "build": "node -v",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node test-netlify.js"
   },
   "engines": {
     "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.18.0"
   }
 }

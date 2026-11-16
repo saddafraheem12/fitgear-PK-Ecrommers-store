@@ -10,15 +10,12 @@ package-lock.json
 *.key
 
 # SQLite Database & Write-Ahead Logs
-*.sqlite
-*.sqlite3
-*.db
-fitgear.sqlite
-fitgear.sqlite-shm
-fitgear.sqlite-wal
 *.sqlite-wal
 *.sqlite-shm
 *.db-journal
+# fitgear.sqlite is tracked for deployment to Netlify Functions (seeded data)
+# To ignore local database changes, uncomment the line below:
+# fitgear.sqlite
 
 # Operating System Files
 .DS_Store
@@ -29,4 +26,8 @@ desktop.ini
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-*.log
+*.logfitgear.sqlite
+backups/fitgear.sqlite
+fitgear.sqlite
+
+backups/
