@@ -18,8 +18,6 @@
 [functions]
   # Fast and modern function bundling with esbuild
   node_bundler = "esbuild"
-  # node:sqlite is compiled into the Node 22 binary, mark as external
-  external_node_modules = ["node:sqlite"]
   # Package initial SQLite database with the function bundle
   included_files = ["fitgear.sqlite"]
 

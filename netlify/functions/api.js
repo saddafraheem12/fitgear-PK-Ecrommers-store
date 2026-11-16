@@ -1,7 +1,7 @@
 /**
  * FITGEAR PAKISTAN - NETLIFY SERVERLESS FUNCTION HANDLER
- * Bridges Netlify Functions (AWS Lambda / Fetch API) to FitGear Core API Router.
- * Supports both Netlify Functions v1 (exports.handler) and v2 (default export).
+ * Bridges Netlify Functions (AWS Lambda / Web Fetch API) to FitGear Core API Router.
+ * Automatically adapts between Netlify Functions v1 (AWS Lambda event) and v2 (Web standard Request).
  */
 
 const { handleApiRequest, getCorsHeaders } = require('../../backend/router');
@@ -27,17 +27,24 @@ function normalizePath(rawPath = '') {
     return p;
 }
 
+function isFetchRequest(obj) {
+    return !!(
+        obj &&
+        (typeof Request !== 'undefined' && obj instanceof Request) ||
+        (typeof obj?.headers?.entries === 'function' && typeof obj?.text === 'function')
+    );
+}
+
 /**
- * Netlify Functions v1 / AWS Lambda Handler
+ * Netlify Functions v1 (AWS Lambda Event) Execution Path
  */
-exports.handler = async (event, context) => {
+async function handleLambdaEvent(event = {}, context = {}) {
     try {
         const method = (event.httpMethod || 'GET').toUpperCase();
         const pathname = normalizePath(event.path || '');
         const query = event.queryStringParameters || {};
         const headers = event.headers || {};
 
-        // OPTIONS preflight
         if (method === 'OPTIONS') {
             return {
                 statusCode: 204,
@@ -46,7 +53,6 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Parse request body (JSON and application/x-www-form-urlencoded)
         let body = {};
         if (event.body) {
             const contentType = (headers['content-type'] || headers['Content-Type'] || '').toLowerCase();
@@ -63,14 +69,14 @@ exports.handler = async (event, context) => {
             } else {
                 try {
                     body = rawString ? JSON.parse(rawString) : {};
-                } catch (jsonErr) {
+                } catch (_) {
                     try {
                         const params = new URLSearchParams(rawString);
                         body = {};
                         for (const [k, v] of params.entries()) {
                             body[k] = v;
                         }
-                    } catch (_) {
+                    } catch (parseErr) {
                         return {
                             statusCode: 400,
                             headers: { 'Content-Type': 'application/json', ...getCorsHeaders(headers) },
@@ -108,12 +114,12 @@ exports.handler = async (event, context) => {
             body: JSON.stringify({ success: false, error: err.message || 'Internal server error' })
         };
     }
-};
+}
 
 /**
- * Netlify Functions v2 (Modern Web Fetch Request / Response)
+ * Netlify Functions v2 (Web Standard Fetch Request / Response) Execution Path
  */
-exports.default = async (req, context) => {
+async function handleFetchRequest(req, context = {}) {
     try {
         const url = new URL(req.url);
         const pathname = normalizePath(url.pathname);
@@ -177,9 +183,26 @@ exports.default = async (req, context) => {
             }
         });
     } catch (err) {
+        console.error('[Netlify Function Fetch Error]:', err);
         return new Response(JSON.stringify({ success: false, error: err.message || 'Server error' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
         });
     }
-};
+}
+
+/**
+ * Universal Handler: Autodetects whether invocation is Lambda Event or Web Request.
+ */
+async function universalHandler(arg1, arg2) {
+    if (isFetchRequest(arg1)) {
+        return handleFetchRequest(arg1, arg2);
+    }
+    return handleLambdaEvent(arg1, arg2);
+}
+
+exports.handler = universalHandler;
+exports.default = universalHandler;
+module.exports = universalHandler;
+module.exports.handler = universalHandler;
+module.exports.default = universalHandler;
